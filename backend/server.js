@@ -6,98 +6,133 @@ app.use(express.json());
 
 const PORT = 3000;
 
-// 🔌 Database connection
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "1234", // change if different
+  password: "1234",
   database: "web"
 });
 
-// 🧪 Test DB
-app.get("/", (req, res) => {
-  try {
-    res.json({ message: "DB connected" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "DB failed" });
-  }
+//
+// 👤 USERS
+//
+
+// GET all users
+app.get("/users", async (req, res) => {
+  const [rows] = await pool.query("SELECT * FROM users");
+  res.json(rows);
 });
 
-// 📥 GET user by ID
-app.get("/user/:id", async (req, res) => {
-  try {
-    const [rows] = await pool.query(
-      "SELECT * FROM users WHERE user_id = ?",
-      [req.params.id]
-    );
-
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "failed to fetch user" });
-  }
+// GET single user
+app.get("/users/:id", async (req, res) => {
+  const [rows] = await pool.query(
+    "SELECT * FROM users WHERE user_id = ?",
+    [req.params.id]
+  );
+  res.json(rows[0]);
 });
 
-// ➕ POST create user
-app.post("/user", async (req, res) => {
+// CREATE user
+app.post("/users", async (req, res) => {
   const { name, email } = req.body;
 
-  try {
-    const [result] = await pool.query(
-      "INSERT INTO users (name, email) VALUES (?, ?)",
-      [name, email]
-    );
+  const [result] = await pool.query(
+    "INSERT INTO users (name, email) VALUES (?, ?)",
+    [name, email]
+  );
 
-    res.json({
-      message: "user created",
-      id: result.insertId
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "failed to create user" });
-  }
+  res.json({ id: result.insertId });
 });
 
-// 💰 POST income
-app.post("/income", async (req, res) => {
-  const { user_id, amount, source, date } = req.body;
+// DELETE user
+app.delete("/users/:id", async (req, res) => {
+  const [result] = await pool.query(
+    "DELETE FROM users WHERE user_id = ?",
+    [req.params.id]
+  );
 
-  try {
-    const [result] = await pool.query(
-      "INSERT INTO income (user_id, amount, source, date) VALUES (?, ?, ?, ?)",
-      [user_id, amount, source, date]
-    );
-
-    res.json({
-      message: "income added",
-      id: result.insertId
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "failed to add income" });
-  }
+  res.json({ deleted: result.affectedRows });
 });
 
-// 🗑 DELETE user
-app.delete("/user/:id", async (req, res) => {
-  try {
-    const [result] = await pool.query(
-      "DELETE FROM users WHERE user_id = ?",
-      [req.params.id]
-    );
+//
+// 💰 INCOME
+//
 
-    res.json({
-      message: "user deleted",
-      affectedRows: result.affectedRows
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "failed to delete user" });
-  }
+// GET user's income
+app.get("/users/:id/income", async (req, res) => {
+  const [rows] = await pool.query(
+    "SELECT * FROM income WHERE user_id = ?",
+    [req.params.id]
+  );
+  res.json(rows);
 });
 
-// ▶️ Start server
+// ADD income
+app.post("/users/:id/income", async (req, res) => {
+  const { amount, source, date } = req.body;
+
+  const [result] = await pool.query(
+    "INSERT INTO income (user_id, amount, source, date) VALUES (?, ?, ?, ?)",
+    [req.params.id, amount, source, date]
+  );
+
+  res.json({ id: result.insertId });
+});
+
+//
+// 💸 EXPENSES
+//
+
+// GET user's expenses
+app.get("/users/:id/expenses", async (req, res) => {
+  const [rows] = await pool.query(
+    "SELECT * FROM expenses WHERE user_id = ?",
+    [req.params.id]
+  );
+  res.json(rows);
+});
+
+// ADD expense
+app.post("/users/:id/expenses", async (req, res) => {
+  const { amount, category, date } = req.body;
+
+  const [result] = await pool.query(
+    "INSERT INTO expenses (user_id, amount, category, date) VALUES (?, ?, ?, ?)",
+    [req.params.id, amount, category, date]
+  );
+
+  res.json({ id: result.insertId });
+});
+
+//
+// 📊 REPORT
+//
+
+app.get("/users/:id/report", async (req, res) => {
+  const user_id = req.params.id;
+
+  const [incomeRows] = await pool.query(
+    "SELECT SUM(amount) AS total_income FROM income WHERE user_id = ?",
+    [user_id]
+  );
+
+  const [expenseRows] = await pool.query(
+    "SELECT SUM(amount) AS total_expense FROM expenses WHERE user_id = ?",
+    [user_id]
+  );
+
+  const total_income = incomeRows[0].total_income || 0;
+  const total_expense = expenseRows[0].total_expense || 0;
+
+  res.json({
+    user_id,
+    total_income,
+    total_expense,
+    balance: total_income - total_expense
+  });
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
