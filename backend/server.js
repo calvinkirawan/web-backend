@@ -1,40 +1,103 @@
 import express from "express";
-import cors from "cors";
+import mysql from "mysql2/promise";
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 
 const PORT = 3000;
 
-// In-memory data (temporary "database")
-let transactions = [];
+// 🔌 Database connection
+const pool = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "1234", // change if different
+  database: "web"
+});
 
-// Test route
+// 🧪 Test DB
 app.get("/", (req, res) => {
-  res.json({ message: "API is running" });
+  try {
+    res.json({ message: "DB connected" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB failed" });
+  }
 });
 
-// Get all transactions
-app.get("/transactions", (req, res) => {
-  res.json(transactions);
+// 📥 GET user by ID
+app.get("/user/:id", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT * FROM users WHERE user_id = ?",
+      [req.params.id]
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "failed to fetch user" });
+  }
 });
 
-// Add transaction
-app.post("/transactions", (req, res) => {
-  const { amount, type, category } = req.body;
+// ➕ POST create user
+app.post("/user", async (req, res) => {
+  const { name, email } = req.body;
 
-  const newTx = {
-    id: Date.now(),
-    amount,
-    type,
-    category
-  };
+  try {
+    const [result] = await pool.query(
+      "INSERT INTO users (name, email) VALUES (?, ?)",
+      [name, email]
+    );
 
-  transactions.push(newTx);
-  res.json(newTx);
+    res.json({
+      message: "user created",
+      id: result.insertId
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "failed to create user" });
+  }
 });
 
+// 💰 POST income
+app.post("/income", async (req, res) => {
+  const { user_id, amount, source, date } = req.body;
+
+  try {
+    const [result] = await pool.query(
+      "INSERT INTO income (user_id, amount, source, date) VALUES (?, ?, ?, ?)",
+      [user_id, amount, source, date]
+    );
+
+    res.json({
+      message: "income added",
+      id: result.insertId
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "failed to add income" });
+  }
+});
+
+// 🗑 DELETE user
+app.delete("/user/:id", async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM users WHERE user_id = ?",
+      [req.params.id]
+    );
+
+    res.json({
+      message: "user deleted",
+      affectedRows: result.affectedRows
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "failed to delete user" });
+  }
+});
+
+// ▶️ Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
