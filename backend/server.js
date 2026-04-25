@@ -1,6 +1,7 @@
 import express from "express";
 import mysql from "mysql2/promise";
 import cors from "cors";
+import bcrypt from "bcrypt";
 
 const app = express();
 app.use(express.json());
@@ -15,7 +16,7 @@ const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "web"
+  database: "db"
 });
 
 //
@@ -24,6 +25,56 @@ const pool = mysql.createPool({
 const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
+
+
+// --- AUTHENTICATION ROUTES ---
+
+// 1. REGISTER (Use this once to create your admin account)
+app.post("/auth/register", asyncHandler(async (req, res) => {
+  const { email, password, role } = req.body;
+
+  // Hash the password (10 rounds of salt)
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const [result] = await pool.query(
+    "INSERT INTO users (email, password_hash, role) VALUES (?, ?, ?)",
+    [email, hashedPassword, role || 'Admin']
+  );
+
+  res.json({ success: true, message: "User created!", userId: result.insertId });
+}));
+
+// 2. LOGIN
+app.post("/auth/login", asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  // Find user by email
+  const [users] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
+  
+  if (users.length === 0) {
+    return res.status(401).json({ success: false, error: "Invalid email or password" });
+  }
+
+  const user = users[0];
+
+  // Compare the entered password with the hashed password in DB
+  const isMatch = await bcrypt.compare(password, user.password_hash);
+
+  if (!isMatch) {
+    return res.status(401).json({ success: false, error: "Invalid email or password" });
+  }
+
+  // Login successful
+  res.json({
+    success: true,
+    data: {
+      id: user.id,
+      email: user.email,
+      role: user.role
+    }
+  });
+}));
+
 
 //
 // 👤 USERS
@@ -61,18 +112,18 @@ app.get("/users/:id", asyncHandler(async (req, res) => {
 
 // CREATE user
 app.post("/users", asyncHandler(async (req, res) => {
-  const { name, email } = req.body;
+  const { email, password_hash } = req.body;
 
-  if (!name || !email) {
+  if (!email || !password_hash) {
     return res.status(400).json({
       success: false,
-      error: "name and email are required"
+      error: "email and password are required"
     });
   }
 
   const [result] = await pool.query(
-    "INSERT INTO users (name, email) VALUES (?, ?)",
-    [name, email]
+    "INSERT INTO users (email, password_hash) VALUES (?, ?)",
+    [email, password_hash]
   );
 
   res.json({

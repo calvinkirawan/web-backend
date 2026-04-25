@@ -1,52 +1,50 @@
 import { useEffect, useState } from "react";
 
 function App() {
-  const [users, setUsers] = useState([]);
-  const [name, setName] = useState("");
+  // Correctly define state for email and password
   const [email, setEmail] = useState("");
-
-  const fetchUsers = () => {
-    fetch("http://localhost:3000/users")
-      .then(res => res.json())
-      .then(data => setUsers(data.data));
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const [password, setPassword] = useState("");
 
   const createUser = async () => {
-    await fetch("http://localhost:3000/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ name, email })
-    });
+    try {
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password }) // Now both exist!
+      });
 
-    setName("");
-    setEmail("");
-    fetchUsers(); // refresh list
+      if (response.ok) {
+        alert("User registered successfully!");
+        setEmail(""); // Clear the inputs
+        setPassword("");
+      } else {
+        alert("Registration failed.");
+      }
+    } catch (error) {
+      console.error("Error connecting to server:", error);
+    }
   };
 
   return (
-    <div>
-      <h1>Users</h1>
-
-      <input
-        placeholder="Name"
-        value={name}
-        onChange={e => setName(e.target.value)}
-      />
+    <div style={{ padding: "20px" }}>
+      <h1>Register User</h1>
 
       <input
         placeholder="Email"
         value={email}
-        onChange={e => setEmail(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)} // Correct setter
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)} // Correct setter
       />
 
       <button onClick={createUser}>Add User</button>
-      
     </div>
   );
 }
