@@ -1,7 +1,6 @@
-import express from 'express';
-import cors from 'cors';
-import authRoutes from './routes/authRoutes.js';
-import userRoutes from './routes/userRoutes.js';
+const express = require('express');
+const cors = require('cors');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -9,15 +8,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Routes - This connects your modular files
+app.use('/auth', authRoutes);
+
 // Health Check (For your demo)
 app.get('/', (req, res) => {
     res.send('Accounting Backend is Running 🚀');
 });
-
-// Routes - This connects your modular files
-app.use('/auth', authRoutes);
-
-app.use('/users', userRoutes)
 
 const PORT = 3000;
 app.listen(PORT, () => {
