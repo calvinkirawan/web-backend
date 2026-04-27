@@ -75,7 +75,6 @@ function Login() {
   );
 }
 
-// Simple CSS-in-JS for instant styling
 const styles = {
   container: {
     height: '100vh',

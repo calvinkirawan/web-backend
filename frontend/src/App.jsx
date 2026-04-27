@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar';
 import Register from './pages/register';
 import Login from './pages/login';
 import Dashboard from './pages/Dashboard';
+import IncomeTracker from './pages/incometracker';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <div style={{ flex: 1, padding: '20px' }}>
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/income" element={<IncomeTracker />} />
                 <Route path="*" element={<div>Page coming soon...</div>} />
               </Routes>
             </div>

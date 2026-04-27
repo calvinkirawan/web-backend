@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 function Sidebar() {
     const features = [
         { name: 'Dashboard', path: '/dashboard' },
+        { name: 'Income', path: '/income' }, 
         { name: 'User Management', path: '/users' },
         { name: 'Invoices', path: '/invoices' },
         { name: 'Expenses', path: '/expenses' },
