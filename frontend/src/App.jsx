@@ -6,6 +6,7 @@ import Register from './pages/register';
 import Login from './pages/login';
 import Dashboard from './pages/Dashboard';
 import IncomeTracker from './pages/incometracker';
+import ExpenseTracker from './pages/expensetracker';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/income" element={<IncomeTracker />} />
+                <Route path="/expenses" element={<ExpenseTracker />} />
                 <Route path="*" element={<div>Page coming soon...</div>} />
               </Routes>
             </div>

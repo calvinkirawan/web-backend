@@ -59,4 +59,32 @@ router.get('/income', async (req, res) => {
     }
 });
 
+// POST: /api/stats/expenses
+router.post('/expenses', async (req, res) => {
+    const { userId, category, description, amount, date } = req.body;
+    try {
+        await db.query(
+            "INSERT INTO expenses (user_id, category, description, amount, date) VALUES (?, ?, ?, ?, ?)",
+            [userId, category, description, amount, date]
+        );
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// GET: /api/stats/expenses
+router.get('/expenses', async (req, res) => {
+    const { userId } = req.query; // This captures the ?userId=...
+    try {
+        const [rows] = await db.query(
+            "SELECT * FROM expenses WHERE user_id = ? ORDER BY date DESC",
+            [userId]
+        );
+        res.json({ success: true, data: rows });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 export default router;
