@@ -7,6 +7,10 @@ import Login from './pages/login';
 import Dashboard from './pages/Dashboard';
 import IncomeTracker from './pages/incometracker';
 import ExpenseTracker from './pages/expensetracker';
+import CustomerManager from './pages/customermanager';
+import BusinessLobby from './pages/businesslobby';
+import AddBusiness from './pages/add-business';
+
 
 function App() {
   return (
@@ -16,6 +20,8 @@ function App() {
         <p>Already have an account? <Link to="/login">Login here</Link></p></div>} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/business-lobby" element={<BusinessLobby />} />
+        <Route path="/add-business" element={<AddBusiness />} />
         <Route path="/*" element={
           <div style={{ display: 'flex' }}>
             <Sidebar />
@@ -24,7 +30,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/income" element={<IncomeTracker />} />
                 <Route path="/expenses" element={<ExpenseTracker />} />
-                <Route path="*" element={<div>Page coming soon...</div>} />
+                <Route path="/customer" element={<CustomerManager />} />
               </Routes>
             </div>
           </div>

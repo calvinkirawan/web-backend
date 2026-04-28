@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import BusinessLobby from '../pages/businesslobby';
 
 function Sidebar() {
     const features = [
+        { name: 'Switch Businessses', path: '/business-lobby' },
         { name: 'Dashboard', path: '/dashboard' },
         { name: 'Income', path: '/income' },
         { name: 'Expenses', path: '/expenses' } ,

@@ -3,6 +3,8 @@ import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
+import customerRoutes from './routes/customerRoutes.js';
+import businessRoutes from './routes/businessRoutes.js';
 
 const app = express();
 
@@ -21,6 +23,10 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes)
 
 app.use('/stats', statsRoutes)
+
+app.use('/customer', customerRoutes)
+
+app.use('/businesses', businessRoutes)
 
 const PORT = 3000;
 app.listen(PORT, () => {

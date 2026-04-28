@@ -20,7 +20,7 @@ function Login() {
       if (res.data.success) {
         // Store user info in local storage so the app remembers who is logged in
         localStorage.setItem('user', JSON.stringify(res.data.data));
-        navigate('/dashboard');
+        navigate('/business-lobby');
       }
     } catch (err) {
       setError(err.response?.data?.error || "Connection to server failed");

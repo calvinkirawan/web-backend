@@ -4,8 +4,8 @@ import db from '../config/db.js'; // 1. Double check this path!
 const router = express.Router();
 
 router.get('/summary', async (req, res) => {
-    const { user_id } = req.query;
-    if (!user_id) {
+    const { businessId } = req.query;
+    if (!businessId) {
         return res.status(400).json({ success: false, error: "User ID is required" });
     }
     try {

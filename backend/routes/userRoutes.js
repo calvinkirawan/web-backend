@@ -60,4 +60,17 @@ router.delete("/:id", asyncHandler(async (req, res) => {
   res.json({ success: true, data: { deleted: result.affectedRows } });
 }));
 
+router.post('/', async (req, res) => {
+    const { userId, name, type, code } = req.body;
+    try {
+        await db.query(
+            "INSERT INTO accounts (user_id, name, type, code) VALUES (?, ?, ?, ?)",
+            [userId, name, type, code]
+        );
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 export default router;
