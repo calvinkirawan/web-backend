@@ -1,10 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import BusinessLobby from '../pages/businesslobby';
 
 function Sidebar() {
+    const handleLogout = () => {
+        // Option A: Clear specific items (Safer)
+        localStorage.removeItem('user');
+        localStorage.removeItem('activeBusiness');
+        window.location.href = '/login';
+    };
     const features = [
         { name: 'Switch Businessses', path: '/business-lobby' },
+        { name: 'Customer Manager', path: '/customer-manager'},
         { name: 'Dashboard', path: '/dashboard' },
         { name: 'Income', path: '/income' },
         { name: 'Expenses', path: '/expenses' } ,
@@ -26,7 +34,7 @@ function Sidebar() {
                     </li>
                 ))}
             </ul>
-            <button style={{ marginTop: '20px' }} onClick={() => window.location.href = '/'}>Logout</button>
+            <button style={{ marginTop: '20px' }} onClick={handleLogout}>Logout</button>
         </div>
     );
 }

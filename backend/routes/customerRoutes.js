@@ -2,13 +2,13 @@ import express from 'express';
 const router = express.Router();
 import db from '../config/db.js'; // Adjust path to your db config
 
-// POST: Add new customer
+// POST: Add customer for specific business
 router.post('/', async (req, res) => {
-    const { userId, name, email, address } = req.body;
+    const { userId, businessId, name, email, phone, address } = req.body;
     try {
         await db.query(
-            "INSERT INTO customers (user_id, name, email, address) VALUES (?, ?, ?, ?)",
-            [userId, name, email, address]
+            "INSERT INTO customers (user_id, business_id, name, email, phone, address) VALUES (?, ?, ?, ?, ?, ?)",
+            [userId, businessId, name, email, phone, address]
         );
         res.json({ success: true });
     } catch (err) {
@@ -16,11 +16,14 @@ router.post('/', async (req, res) => {
     }
 });
 
-// GET: Get all customers for a user
+// GET: List customers for current business
 router.get('/', async (req, res) => {
-    const { userId } = req.query;
+    const { businessId } = req.query;
     try {
-        const [rows] = await db.query("SELECT * FROM customers WHERE user_id = ?", [userId]);
+        const [rows] = await db.query(
+            "SELECT * FROM customers WHERE business_id = ? ORDER BY name ASC", 
+            [businessId]
+        );
         res.json({ success: true, data: rows });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });

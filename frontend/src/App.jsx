@@ -10,6 +10,7 @@ import ExpenseTracker from './pages/expensetracker';
 import CustomerManager from './pages/customermanager';
 import BusinessLobby from './pages/businesslobby';
 import AddBusiness from './pages/add-business';
+import ProductManager from './pages/productmanager';
 
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/business-lobby" element={<BusinessLobby />} />
         <Route path="/add-business" element={<AddBusiness />} />
+        <Route path="/product-manager" element={<ProductManager />} />
+        <Route path="/customer-manager" element={<CustomerManager />} />
         <Route path="/*" element={
           <div style={{ display: 'flex' }}>
             <Sidebar />

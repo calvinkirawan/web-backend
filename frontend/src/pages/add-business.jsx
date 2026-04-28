@@ -21,7 +21,7 @@ function AddBusiness() {
 
       if (res.data.success) {
         alert("Success! Business branch registered.");
-        navigate('/select-business'); // Send them back to the lobby
+        navigate('/business-lobby'); // Send them back to the lobby
       }
     } catch (err) {
       console.error("Error adding business:", err);
