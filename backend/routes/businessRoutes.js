@@ -15,11 +15,11 @@ router.get('/', async (req, res) => {
 
 // POST a new business branch
 router.post('/', async (req, res) => {
-    const { userId, name, address, npwp } = req.body;
+    const { userId, name, address, npwp, default_currency } = req.body;
     try {
         const [result] = await db.query(
-            "INSERT INTO businesses (user_id, name, address, npwp) VALUES (?, ?, ?, ?)",
-            [userId, name, address, npwp]
+            "INSERT INTO businesses (user_id, name, address, npwp, default_currency) VALUES (?, ?, ?, ?, ?)",
+            [userId, name, address, npwp, default_currency]
         );
         res.json({ success: true, businessId: result.insertId });
     } catch (err) {

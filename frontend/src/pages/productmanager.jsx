@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/api';
 import Sidebar from '../components/Sidebar';
+import { formatCurrency } from '../utils/formatters';
 
 function ProductManager() {
   const [products, setProducts] = useState([]);
   const [formData, setFormData] = useState({ name: '', description: '', price: '', category: 'Good' });
   const activeBusiness = JSON.parse(localStorage.getItem('activeBusiness'));
+  const currency = activeBusiness?.default_currency || 'IDR';
 
   useEffect(() => {
     if (activeBusiness) fetchProducts();
@@ -28,7 +30,7 @@ function ProductManager() {
         ...formData
       });
       if (res.data.success) {
-        setFormData({ name: '', description: '', price: '', category: 'Good' });
+        setFormData({ name: '', description: '', price: '', category: 'Goods' });
         fetchProducts();
         alert("Product added successfully!");
       }
@@ -55,7 +57,7 @@ function ProductManager() {
               style={styles.input}
             />
             <input 
-              type="number" placeholder="Price (Rp)" required
+              type="number" placeholder={`Price (${activeBusiness.default_currency})`} required
               value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})}
               style={styles.input}
             />
@@ -63,8 +65,8 @@ function ProductManager() {
               value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}
               style={styles.input}
             >
-              <option value="Good">Good (Barang)</option>
-              <option value="Service">Service (Jasa)</option>
+              <option value="Goods">Good (Barang)</option>
+              <option value="Services">Service (Jasa)</option>
             </select>
             <textarea 
               placeholder="Description (Optional)" 
@@ -92,7 +94,7 @@ function ProductManager() {
                   <td style={styles.td}><strong>{p.name}</strong></td>
                   <td style={styles.td}>{p.category}</td>
                   <td style={styles.td}>{p.description || '-'}</td>
-                  <td style={styles.td}>Rp {parseFloat(p.price).toLocaleString('id-ID')}</td>
+                  <td style={styles.td}>{formatCurrency(p.price, currency)}</td>
                 </tr>
               ))}
               {products.length === 0 && (

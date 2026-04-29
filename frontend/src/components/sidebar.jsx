@@ -12,6 +12,7 @@ function Sidebar() {
     };
     const features = [
         { name: 'Switch Businessses', path: '/business-lobby' },
+        { name: 'Product Manager', path: '/product-manager'},
         { name: 'Customer Manager', path: '/customer-manager'},
         { name: 'Dashboard', path: '/dashboard' },
         { name: 'Income', path: '/income' },

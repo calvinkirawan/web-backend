@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
 
 function AddBusiness() {
-  const [formData, setFormData] = useState({ name: '', address: '', npwp: '' });
+  const [formData, setFormData] = useState({ name: '', address: '', npwp: '', default_currency: 'IDR' });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   
@@ -71,6 +71,20 @@ function AddBusiness() {
               onChange={(e) => setFormData({...formData, address: e.target.value})}
               style={{...styles.input, minHeight: '80px', resize: 'vertical'}}
             />
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label>Default Currency</label>
+            <select 
+              value={formData.default_currency} 
+              onChange={e => setFormData({...formData, default_currency: e.target.value})}
+              style={styles.input}
+            >
+              <option value="IDR">Indonesian Rupiah (IDR)</option>
+              <option value="USD">US Dollar (USD)</option>
+              <option value="SGD">Singapore Dollar (SGD)</option>
+            </select>
+            <small style={{ color: '#666' }}>This will be the base currency for all products and taxes in this branch.</small>
           </div>
 
           <div style={styles.buttonGroup}>

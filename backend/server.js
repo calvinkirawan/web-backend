@@ -6,6 +6,7 @@ import statsRoutes from './routes/statsRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
 import businessRoutes from './routes/businessRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import rateRoutes from './routes/rateRoutes.js';
 
 const app = express();
 
@@ -31,9 +32,8 @@ app.use('/businesses', businessRoutes)
 
 app.use('/products', productRoutes)
 
-app.get('/test-url', (req, res) => {
-    res.send("If you see this, the server is working!");
-});
+app.use('/rates', rateRoutes)
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
