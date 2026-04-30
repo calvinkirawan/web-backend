@@ -14,11 +14,16 @@ function Sidebar() {
         { name: 'Switch Businessses', path: '/business-lobby' },
         { name: 'Product Manager', path: '/product-manager'},
         { name: 'Customer Manager', path: '/customer-manager'},
+        { name: 'Invoices', path: '/invoice-manager' },
+        { name: 'Receiveable', path: '/payment-manager'},
+        { name: 'Vendor',  path: '/vendor-manager' },
+        { name: 'Bills', path: '/bill-manager' },
+        { name: 'Payable', path: '/payable'},
         { name: 'Dashboard', path: '/dashboard' },
         { name: 'Income', path: '/income' },
         { name: 'Expenses', path: '/expenses' } ,
         { name: 'User Management', path: '/users' },
-        { name: 'Invoices', path: '/invoices' },
+        
         // Add more of your 16 features here later
     ];
 

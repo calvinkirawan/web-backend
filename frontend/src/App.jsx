@@ -11,6 +11,11 @@ import CustomerManager from './pages/customermanager';
 import BusinessLobby from './pages/businesslobby';
 import AddBusiness from './pages/add-business';
 import ProductManager from './pages/productmanager';
+import InvoiceManager from './pages/invoicemanager';
+import VendorManager from './pages/vendormanager';
+import BillManager from './pages/billmanager';
+import PaymentManager from './pages/paymentmanager';
+import Payable from './pages/payable';
 
 
 function App() {
@@ -25,6 +30,11 @@ function App() {
         <Route path="/add-business" element={<AddBusiness />} />
         <Route path="/product-manager" element={<ProductManager />} />
         <Route path="/customer-manager" element={<CustomerManager />} />
+        <Route path="/invoice-manager" element={<InvoiceManager />} />
+        <Route path="/payment-manager" element={<PaymentManager />} />
+        <Route path="/vendor-manager" element={<VendorManager />} />
+        <Route path="/bill-manager" element={<BillManager />} />
+        <Route path="/payable" element={<Payable />} />
         <Route path="/*" element={
           <div style={{ display: 'flex' }}>
             <Sidebar />

@@ -7,6 +7,11 @@ import customerRoutes from './routes/customerRoutes.js';
 import businessRoutes from './routes/businessRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import rateRoutes from './routes/rateRoutes.js';
+import invoiceRoutes from './routes/invoiceRoutes.js';
+import vendorRoutes from './routes/vendorRoutes.js';
+import billRoutes from './routes/billRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import payableRoutes from './routes/payableRoutes.js';
 
 const app = express();
 
@@ -34,6 +39,15 @@ app.use('/products', productRoutes)
 
 app.use('/rates', rateRoutes)
 
+app.use('/invoices', invoiceRoutes)
+
+app.use('/vendors', vendorRoutes)
+
+app.use('/bills', billRoutes)
+
+app.use('/payments', paymentRoutes)
+
+app.use('/payable', payableRoutes)
 
 const PORT = 3000;
 app.listen(PORT, () => {

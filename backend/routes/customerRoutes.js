@@ -30,4 +30,29 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, email, phone, address } = req.body;
+    try {
+        await db.execute(
+            "UPDATE customers SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?",
+            [name, email, phone, address, id]
+        );
+        res.json({ success: true, message: "Customer updated" });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// DELETE: Remove customer
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await db.execute("DELETE FROM customers WHERE id = ?", [id]);
+        res.json({ success: true, message: "Customer deleted" });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 export default router;
